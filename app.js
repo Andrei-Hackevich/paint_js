@@ -4,11 +4,15 @@ const colors = document.getElementsByClassName('jsColor');
 const range = document.getElementById('jsRange');
 const mode = document.getElementById('jsMode');
 
-canvas.width = 700;
-canvas.height = 700;
+const initial_color = '#2c2c2c';
+const canvasSize = 700;
+
+canvas.width = canvasSize;
+canvas.height = canvasSize;
 
 ctx.lineWidth = 2.5;
-ctx.strokeStyle = '#2c2c2c';
+ctx.strokeStyle = initial_color;
+ctx.fillStyle = initial_color;
 
 let painting = false;
 let filling = false;
@@ -40,21 +44,27 @@ function onMouseDown(event) {
 function handleColorClick(event) {
     const color = event.target.style.backgroundColor;
     ctx.strokeStyle = color;
+    ctx.fillStyle = color;
 }
 
 function handleRangeChange(event) {
     const rangeWidth = event.target.value;
     ctx.lineWidth = rangeWidth;
-
 }
 
 function handleModeClick() {
     if (filling === true) {
         filling = false;
-        mode.innerText = 'Рисование';
+        mode.innerText = 'Заливка';
     } else {
         filling = true;
-        mode.innerText = 'Заливка';
+        mode.innerText = 'Рисование';
+    }
+}
+
+function handleCanvasClick() {
+    if (filling) {
+        ctx.fillRect(0, 0, canvasSize, canvasSize);
     }
 }
 
@@ -62,7 +72,8 @@ if (canvas) {
     canvas.addEventListener('mousemove', onMouseMove);
     canvas.addEventListener('mousedown', onMouseDown);
     canvas.addEventListener('mouseup', stopPainting);
-    canvas.addEventListener('mouseleave', stopPainting)
+    canvas.addEventListener('mouseleave', stopPainting);
+    canvas.addEventListener('click', handleCanvasClick);
 }
 
 Array.from(colors).forEach(color => color.addEventListener('click', handleColorClick));
